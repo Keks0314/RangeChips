@@ -23,8 +23,8 @@ public  class Main {
             range = scanner.nextInt();
         }
         initializeDict();
-        Set<String> wordsSet = CombinationGenerator.generate(selectedWord);
-        List<String> matchedWords = searchCoincidence(wordsSet, range, selectedWord[countOfWords - 1], selectedWord[countOfWords - 2]);
+        Set<String> wordsSet = CombinationGenerator.generate(selectedWord, range, selectedWord[countOfWords - 2], selectedWord[countOfWords - 1]);
+        List<String> matchedWords = searchCoincidence(wordsSet);
         printMaxWords(matchedWords);
     }
 
@@ -39,7 +39,7 @@ public  class Main {
         }
     }
 
-    private static List<String> searchCoincidence(Set<String> wordsSet, final int range, final char x, final char y) {
+    private static List<String> searchCoincidence(Set<String> wordsSet) {
         List<String> allMatchedWords = new ArrayList<>();
         int count = 1;
         for (var word : wordsSet) {
@@ -53,40 +53,19 @@ public  class Main {
                     alphabet[index++] = word.replace('*', bucket.getKey());
                 }
                 for (var newWord : alphabet) {
-                    if (dict.contains(newWord) && entersRange(newWord, x, y, range) && !allMatchedWords.contains(newWord)) {
+                    if (dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
                         System.out.println(count + ": " + newWord);
                         allMatchedWords.add(newWord);
                         ++count;
                     }
                 }
-            } else if (dict.contains(word) && entersRange(word, x, y, range) && !allMatchedWords.contains(word)) {
+            } else if (dict.contains(word) && !allMatchedWords.contains(word)) {
                 System.out.println(count + ": " + word);
                 allMatchedWords.add(word);
                 ++count;
             }
         }
         return allMatchedWords;
-    }
-
-    private static boolean entersRange(String word, char x, char y, int range) {
-        List<Integer> countX = new ArrayList<>();
-        List<Integer> countY = new ArrayList<>();
-        for (int i = 0; i < word.length(); ++i) {
-            char c = word.charAt(i);
-            if (c == x) {
-                countX.add(i);
-            } else if (c == y) {
-                countY.add(i);
-            }
-        }
-        for (var a : countX) {
-            for (var b : countY) {
-                if (b - a - 1 == range || a - b - 1 == range) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private static void printMaxWords(List<String> matchedWords) {
