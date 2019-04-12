@@ -81,7 +81,7 @@ public  class Main {
         }
         for (var a : countX) {
             for (var b : countY) {
-                if (Math.abs(a - b) == range - 1) {
+                if (b - a - 1 == range || a - b - 1 == range) {
                     return true;
                 }
             }
