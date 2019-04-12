@@ -9,17 +9,22 @@ public  class Main {
     private static HashSet<String> dict = new HashSet<>();
 
     public static void main(String[] args) {
-        final int countOfWords = 8;
+        final int countOfWords = 9;
         char[] selectedWord = ChipsChooser.choose(countOfWords);
-        System.out.println("Отдельно выбранная буква: " + selectedWord[countOfWords - 1]);
         System.out.print("Случайно выбранные буквы: ");
-        for (char c : selectedWord) {
-            System.out.print(c + " ");
+        for (int i = 0; i < countOfWords - 2; ++i) {
+            System.out.print(selectedWord[i] + " ");
         }
         System.out.println();
+        System.out.println("Отдельно выбранные буквы: " + selectedWord[countOfWords - 2] + ", " + selectedWord[countOfWords - 1]);
+        int range = 0;
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Введите расстояние: ");
+            range = scanner.nextInt();
+        }
         initializeDict();
         Set<String> wordsSet = CombinationGenerator.generate(selectedWord);
-        List<String> matchedWords = searchCoincidence(wordsSet);
+        List<String> matchedWords = searchCoincidence(wordsSet, range, selectedWord[countOfWords - 1], selectedWord[countOfWords - 2]);
         printMaxWords(matchedWords);
     }
 
@@ -34,7 +39,7 @@ public  class Main {
         }
     }
 
-    private static List<String> searchCoincidence(Set<String> wordsSet) {
+    private static List<String> searchCoincidence(Set<String> wordsSet, final int range, final char x, final char y) {
         List<String> allMatchedWords = new ArrayList<>();
         int count = 1;
         for (var word : wordsSet) {
@@ -48,19 +53,40 @@ public  class Main {
                     alphabet[index++] = word.replace('*', bucket.getKey());
                 }
                 for (var newWord : alphabet) {
-                    if (dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
+                    if (dict.contains(newWord) && entersRange(newWord, x, y, range) && !allMatchedWords.contains(newWord)) {
                         System.out.println(count + ": " + newWord);
                         allMatchedWords.add(newWord);
                         ++count;
                     }
                 }
-            } else if (dict.contains(word) && !allMatchedWords.contains(word)) {
+            } else if (dict.contains(word) && entersRange(word, x, y, range) && !allMatchedWords.contains(word)) {
                 System.out.println(count + ": " + word);
                 allMatchedWords.add(word);
                 ++count;
             }
         }
         return allMatchedWords;
+    }
+
+    private static boolean entersRange(String word, char x, char y, int range) {
+        List<Integer> countX = new ArrayList<>();
+        List<Integer> countY = new ArrayList<>();
+        for (int i = 0; i < word.length(); ++i) {
+            char c = word.charAt(i);
+            if (c == x) {
+                countX.add(i);
+            } else if (c == y) {
+                countY.add(i);
+            }
+        }
+        for (var a : countX) {
+            for (var b : countY) {
+                if (Math.abs(a - b) == range - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static void printMaxWords(List<String> matchedWords) {

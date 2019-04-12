@@ -22,10 +22,11 @@ public class ChipsChooser {
             last.setNumber(last.getNumber() - 1);
             words.put(word, last);
         }
-        if (chips[count - 1] == '*') {
-            char tmp = chips[count - 2];
-            chips[count - 2] = chips[count - 1];
-            chips[count - 1] = tmp;
+        int starIndex = new String(chips).indexOf('*');
+        if (starIndex == count - 1 || starIndex == count - 2) {
+            char tmp = chips[count - 3];
+            chips[count - 3] = chips[starIndex];
+            chips[starIndex] = tmp;
         }
         return chips;
     }
