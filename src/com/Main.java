@@ -11,12 +11,13 @@ public  class Main {
     public static void main(String[] args) {
         final int countOfWords = 9;
         char[] selectedWord = ChipsChooser.choose(countOfWords);
+        //char[] selectedWord = { 'М', 'А', 'А', 'Г', 'Р', 'П', 'О', 'Р', 'М' };
         System.out.print("Случайно выбранные буквы: ");
         for (int i = 0; i < countOfWords - 2; ++i) {
             System.out.print(selectedWord[i] + " ");
         }
         System.out.println();
-        System.out.println("Отдельно выбранные буквы: " + selectedWord[countOfWords - 2] + ", " + selectedWord[countOfWords - 1]);
+        System.out.println("Отдельно выбранные буквы: " + selectedWord[countOfWords - 2] + " " + selectedWord[countOfWords - 1]);
         int range = 0;
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.print("Введите расстояние: ");
@@ -25,14 +26,14 @@ public  class Main {
         initializeDict();
         Set<String> wordsSet = CombinationGenerator.generate(selectedWord, range, selectedWord[countOfWords - 2], selectedWord[countOfWords - 1]);
         List<String> matchedWords = searchCoincidence(wordsSet);
-        printMaxWords(matchedWords);
+        printWords(matchedWords);
     }
 
     private static void initializeDict() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("dictionary.txt"), StandardCharsets.UTF_8))) {
-            String string = null;
-            while ((string = reader.readLine()) != null) {
-                dict.add(string);
+            String word = null;
+            while ((word = reader.readLine()) != null) {
+                dict.add(word);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -41,7 +42,6 @@ public  class Main {
 
     private static List<String> searchCoincidence(Set<String> wordsSet) {
         List<String> allMatchedWords = new ArrayList<>();
-        int count = 1;
         for (var word : wordsSet) {
             if (word.contains("*")) {
                 String[] alphabet = new String[32];
@@ -54,23 +54,20 @@ public  class Main {
                 }
                 for (var newWord : alphabet) {
                     if (dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
-                        System.out.println(count + ": " + newWord);
                         allMatchedWords.add(newWord);
-                        ++count;
                     }
                 }
             } else if (dict.contains(word) && !allMatchedWords.contains(word)) {
-                System.out.println(count + ": " + word);
                 allMatchedWords.add(word);
-                ++count;
             }
         }
         return allMatchedWords;
     }
 
-    private static void printMaxWords(List<String> matchedWords) {
+    private static void printWords(List<String> matchedWords) {
         List<String> strings = new ArrayList<>();
         String maxWord = null;
+        int count = 1;
         int maxValue = 0;
         for (String word : matchedWords) {
             char[] charWord = word.toCharArray();
@@ -86,6 +83,8 @@ public  class Main {
             } else if (value == maxValue) {
                 strings.add(word);
             }
+            System.out.println(count + ": " + word + " - " + value);
+            ++count;
         }
         if (strings.size() == 1) {
             System.out.println("Слово " + strings.get(0) + " с максимальным значением " + maxValue);

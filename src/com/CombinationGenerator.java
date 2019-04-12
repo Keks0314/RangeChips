@@ -44,7 +44,7 @@ public class CombinationGenerator {
         }
         for (var a : countX) {
             for (var b : countY) {
-                if (b - a - 1 == range || a - b - 1 == range) {
+                if (Math.abs(b - a) - 1 == range) {
                     return true;
                 }
             }
