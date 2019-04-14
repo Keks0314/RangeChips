@@ -52,6 +52,22 @@ public class WordChecker {
                 countY.add(i);
             }
         }
+        if (x == '*') {
+            for (var index : countY) {
+                if (index + range + 1 <= word.length() || index - range - 1 >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (y == '*') {
+            for (var index : countX) {
+                if (index + range + 1 <= word.length() || index - range - 1 >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
         for (var a : countX) {
             for (var b : countY) {
                 if (Math.abs(b - a) - 1 == range) {
