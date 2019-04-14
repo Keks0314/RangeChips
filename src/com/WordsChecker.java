@@ -4,20 +4,20 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class WordChecker {
-    private static HashSet<String> dict = new HashSet<>();
+public class WordsChecker {
+    private static Set<String> dictionary = new HashSet<>(297510);
 
     public static List<String> check(char[] word, int range, char x, char y) {
-        initializeDict();
-        Set<String> wordsSet = CombinationGenerator.generate(word);
+        initializeDictionary();
+        Set<String> wordsSet = CombinationsGenerator.generate(word);
         return searchCoincidence(wordsSet, range, x, y);
     }
 
-    private static void initializeDict() {
+    private static void initializeDictionary() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("dictionary.txt"), StandardCharsets.UTF_8))) {
             String word = null;
             while ((word = reader.readLine()) != null) {
-                dict.add(word);
+                dictionary.add(word);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -28,20 +28,20 @@ public class WordChecker {
         List<String> allMatchedWords = new ArrayList<>();
         for (var word : wordsSet) {
             if (word.contains("*")) {
-                List<String> wordsWithoutStar = getWordWithoutStar(word);
+                List<String> wordsWithoutStar = getWordWithoutStars(word);
                 for (var newWord : wordsWithoutStar) {
-                    if (entersRange(newWord, x, y, range) && dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
+                    if (dictionary.contains(newWord) && entersRange(newWord, range, x, y) && !allMatchedWords.contains(newWord)) {
                         allMatchedWords.add(newWord);
                     }
                 }
-            } else if (entersRange(word, x, y, range) && dict.contains(word) && !allMatchedWords.contains(word)) {
+            } else if (dictionary.contains(word) && entersRange(word, range, x, y) && !allMatchedWords.contains(word)) {
                 allMatchedWords.add(word);
             }
         }
         return allMatchedWords;
     }
 
-    private static boolean entersRange(String word, char x, char y, int range) {
+    private static boolean entersRange(String word, int range, char x, char y) {
         List<Integer> countX = new ArrayList<>();
         List<Integer> countY = new ArrayList<>();
         for (int i = 0; i < word.length(); ++i) {
@@ -52,17 +52,18 @@ public class WordChecker {
                 countY.add(i);
             }
         }
-        if (x == '*') {
+        if (x == '*' && y == '*') {
+            return true;
+        } else if (x == '*') {
             for (var index : countY) {
-                if (index + range + 1 <= word.length() || index - range - 1 >= 0) {
+                if ((index + range + 1) < word.length() || index - range - 1 >= 0) {
                     return true;
                 }
             }
             return false;
-        }
-        if (y == '*') {
+        } else if (y == '*') {
             for (var index : countX) {
-                if (index + range + 1 <= word.length() || index - range - 1 >= 0) {
+                if ((index + range + 1) < word.length() || index - range - 1 >= 0) {
                     return true;
                 }
             }
@@ -78,7 +79,7 @@ public class WordChecker {
         return false;
     }
 
-    private static List<String> getWordWithoutStar(String word) {
+    private static List<String> getWordWithoutStars(String word) {
         List<String> wordsWithoutStar = new ArrayList<>();
         List<String> wordsWithoutOneStar = replaceStar(word);
         List<String> wordsWithoutTwoStar = null;
@@ -105,16 +106,16 @@ public class WordChecker {
     }
 
     private static List<String> replaceStar(String word) {
-        List<String> listWithReplacedStar = new ArrayList<>();
+        List<String> listWithReplacedStarSymbol = new ArrayList<>();
         String alphabet = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        final int starIndex = word.indexOf("*");
         for (int i = 0; i < alphabet.length(); ++i) {
-            int starIndex = word.indexOf("*");
             StringBuilder newWord = new StringBuilder();
             newWord.append(word, 0, starIndex)
                     .append(alphabet.charAt(i))
                     .append(word, starIndex + 1, word.length());
-            listWithReplacedStar.add(newWord.toString());
+            listWithReplacedStarSymbol.add(newWord.toString());
         }
-        return listWithReplacedStar;
+        return listWithReplacedStarSymbol;
     }
 }
