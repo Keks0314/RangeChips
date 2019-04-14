@@ -37,6 +37,6 @@ public class Words {
         put('Э', new CostAndNumber(1, 10));
         put('Ю', new CostAndNumber(1, 10));
         put('Я', new CostAndNumber(3, 3));
-        put('*', new CostAndNumber(1, 0));
+        put('*', new CostAndNumber(3, 0));
     }};
 }

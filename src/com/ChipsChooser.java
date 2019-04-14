@@ -22,12 +22,6 @@ public class ChipsChooser {
             last.setNumber(last.getNumber() - 1);
             words.put(word, last);
         }
-        int starIndex = new String(chips).indexOf('*');
-        if (starIndex == count - 1 || starIndex == count - 2) {
-            char tmp = chips[count - 3];
-            chips[count - 3] = chips[starIndex];
-            chips[starIndex] = tmp;
-        }
         return chips;
     }
 }

@@ -1,12 +1,9 @@
 package com;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public  class Main {
     private static Map<Character, CostAndNumber> words = Words.map;
-    private static HashSet<String> dict = new HashSet<>();
 
     public static void main(String[] args) {
         final int countOfWords = 9;
@@ -16,52 +13,15 @@ public  class Main {
         for (int i = 0; i < countOfWords - 2; ++i) {
             System.out.print(selectedWord[i] + " ");
         }
-        System.out.println();
-        System.out.println("Отдельно выбранные буквы: " + selectedWord[countOfWords - 2] + " " + selectedWord[countOfWords - 1]);
+        System.out.println("\nОтдельно выбранные буквы: " + selectedWord[countOfWords - 2] + " " + selectedWord[countOfWords - 1]);
         int range = 0;
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.print("Введите расстояние: ");
             range = scanner.nextInt();
         }
-        initializeDict();
-        Set<String> wordsSet = CombinationGenerator.generate(selectedWord, range, selectedWord[countOfWords - 2], selectedWord[countOfWords - 1]);
-        List<String> matchedWords = searchCoincidence(wordsSet);
+        List<String> matchedWords = WordChecker.check(selectedWord, range, selectedWord[countOfWords - 2], selectedWord[countOfWords - 1]);
+        Collections.sort(matchedWords);
         printWords(matchedWords);
-    }
-
-    private static void initializeDict() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("dictionary.txt"), StandardCharsets.UTF_8))) {
-            String word = null;
-            while ((word = reader.readLine()) != null) {
-                dict.add(word);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static List<String> searchCoincidence(Set<String> wordsSet) {
-        List<String> allMatchedWords = new ArrayList<>();
-        for (var word : wordsSet) {
-            if (word.contains("*")) {
-                String[] alphabet = new String[32];
-                int index = 0;
-                for (var bucket : words.entrySet()) {
-                    if (bucket.getKey() == '*') {
-                        continue;
-                    }
-                    alphabet[index++] = word.replace('*', bucket.getKey());
-                }
-                for (var newWord : alphabet) {
-                    if (dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
-                        allMatchedWords.add(newWord);
-                    }
-                }
-            } else if (dict.contains(word) && !allMatchedWords.contains(word)) {
-                allMatchedWords.add(word);
-            }
-        }
-        return allMatchedWords;
     }
 
     private static void printWords(List<String> matchedWords) {
