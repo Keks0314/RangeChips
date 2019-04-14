@@ -10,46 +10,24 @@ public class CombinationGenerator {
     private static ArrayList<String> arrList = new ArrayList<>();
     private static StringBuilder sb = new StringBuilder();
 
-    public static Set<String> generate(final char[] s, int range, char x, char y) {
+    public static Set<String> generate(final char[] s) {
         for (int i = 2; i < s.length + 1; i ++)
             permuteIteration(s, 0, i);
-        Set<String> wordsSet = getCorrectSet(arrList, s, range, x, y);
+        Set<String> wordsSet = getCorrectSet(arrList, s);
         arrList = null;
         System.gc();
         return wordsSet;
     }
 
-    private static Set<String> getCorrectSet(List<String> arrList, char[] s, int range, char x, char y) {
+    private static Set<String> getCorrectSet(List<String> arrList, char[] s) {
         Set<String> wordsSet = new HashSet<>();
         for (var word : arrList) {
             if (word.contains(Character.toString(s[s.length - 1]))
-                    && word.contains(Character.toString(s[s.length - 2]))
-                    && entersRange(word, x, y, range)) {
+                    && word.contains(Character.toString(s[s.length - 2]))) {
                 wordsSet.add(word);
             }
         }
         return wordsSet;
-    }
-
-    private static boolean entersRange(String word, char x, char y, int range) {
-        List<Integer> countX = new ArrayList<>();
-        List<Integer> countY = new ArrayList<>();
-        for (int i = 0; i < word.length(); ++i) {
-            char c = word.charAt(i);
-            if (c == x) {
-                countX.add(i);
-            } else if (c == y) {
-                countY.add(i);
-            }
-        }
-        for (var a : countX) {
-            for (var b : countY) {
-                if (Math.abs(b - a) - 1 == range) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private static void permuteIteration(char[] arr, int index, int limit){

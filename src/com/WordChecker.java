@@ -9,8 +9,8 @@ public class WordChecker {
 
     public static List<String> check(char[] word, int range, char x, char y) {
         initializeDict();
-        Set<String> wordsSet = CombinationGenerator.generate(word, range, x, y);
-        return searchCoincidence(wordsSet);
+        Set<String> wordsSet = CombinationGenerator.generate(word);
+        return searchCoincidence(wordsSet, range, x, y);
     }
 
     private static void initializeDict() {
@@ -24,21 +24,42 @@ public class WordChecker {
         }
     }
 
-    private static List<String> searchCoincidence(Set<String> wordsSet) {
+    private static List<String> searchCoincidence(Set<String> wordsSet, int range, char x, char y) {
         List<String> allMatchedWords = new ArrayList<>();
         for (var word : wordsSet) {
             if (word.contains("*")) {
                 List<String> wordsWithoutStar = getWordWithoutStar(word);
                 for (var newWord : wordsWithoutStar) {
-                    if (dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
+                    if (entersRange(newWord, x, y, range) && dict.contains(newWord) && !allMatchedWords.contains(newWord)) {
                         allMatchedWords.add(newWord);
                     }
                 }
-            } else if (dict.contains(word) && !allMatchedWords.contains(word)) {
+            } else if (entersRange(word, x, y, range) && dict.contains(word) && !allMatchedWords.contains(word)) {
                 allMatchedWords.add(word);
             }
         }
         return allMatchedWords;
+    }
+
+    private static boolean entersRange(String word, char x, char y, int range) {
+        List<Integer> countX = new ArrayList<>();
+        List<Integer> countY = new ArrayList<>();
+        for (int i = 0; i < word.length(); ++i) {
+            char c = word.charAt(i);
+            if (c == x) {
+                countX.add(i);
+            } else if (c == y) {
+                countY.add(i);
+            }
+        }
+        for (var a : countX) {
+            for (var b : countY) {
+                if (Math.abs(b - a) - 1 == range) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static List<String> getWordWithoutStar(String word) {
