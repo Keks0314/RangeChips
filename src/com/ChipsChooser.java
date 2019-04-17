@@ -11,22 +11,21 @@ public class ChipsChooser {
         char[] chips = new char[count];
         for (int i = 0; i < count; ++i) {
             char letter = getRandomLetter();
-            while (letters.get(letter).getAmount() == 0) {
-                letter = getRandomLetter();
-            }
             chips[i] = letter;
-            AmountAndCost updateState = letters.get(letter);
-            updateState.setAmount(updateState.getAmount() - 1);
-            letters.put(letter, updateState);
         }
         return chips;
     }
 
     private static char getRandomLetter() {
-        char word = (char) (randomGenerator.nextInt(0, 33) + 'А');
-        if (word == 32 + 'А') {
-            word = '*';
+        char word = 'А';
+        int choice = randomGenerator.nextInt(1, 132);
+        while (choice > 0) {
+            if (word == 'а') {
+                return '*';
+            }
+            choice -= letters.get(word).getAmount();
+            ++word;
         }
-        return word;
+        return --word;
     }
 }

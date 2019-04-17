@@ -7,19 +7,19 @@ public  class Main {
 
     public static void main(String[] args) {
         final int wordLength = 9;
-        char[] choosedWords = ChipsChooser.choose(wordLength);
-        //char[] choosedWords = { 'М', 'А', 'А', 'Г', 'Р', 'П', 'О', 'Р', 'М' };
+        char[] chosenWords = ChipsChooser.choose(wordLength);
+        //char[] chosenWords = { 'М', 'А', 'А', 'Г', 'Р', 'П', 'О', 'Р', 'М' };
         System.out.print("Случайно выбранные буквы: ");
         for (int i = 0; i < wordLength - 2; ++i) {
-            System.out.print(choosedWords[i] + " ");
+            System.out.print(chosenWords[i] + " ");
         }
-        System.out.println("\nОтдельно выбранные буквы: " + choosedWords[wordLength - 2] + " " + choosedWords[wordLength - 1]);
+        System.out.println("\nОтдельно выбранные буквы: " + chosenWords[wordLength - 2] + " " + chosenWords[wordLength - 1]);
         int range = 0;
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.print("Введите расстояние между буквами: ");
             range = scanner.nextInt();
         }
-        List<String> matchedWords = WordsChecker.check(choosedWords, range, choosedWords[wordLength - 2], choosedWords[wordLength - 1]);
+        List<String> matchedWords = WordsChecker.check(chosenWords, range, chosenWords[wordLength - 2], chosenWords[wordLength - 1]);
         Collections.sort(matchedWords);
         printWords(matchedWords);
     }
