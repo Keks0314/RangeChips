@@ -16,4 +16,8 @@ class AmountAndCost {
     public int getCost() {
         return cost;
     }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

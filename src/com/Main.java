@@ -8,7 +8,7 @@ public  class Main {
     public static void main(String[] args) {
         final int wordLength = 9;
         char[] chosenWords = ChipsChooser.choose(wordLength);
-        //char[] chosenWords = { 'М', 'А', 'А', 'Г', 'Р', 'П', 'О', 'Р', 'М' };
+        //char[] chosenWords = { 'М', 'А', 'А', 'Г', 'Р', 'П', 'О', '*', 'М' };
         System.out.print("Случайно выбранные буквы: ");
         for (int i = 0; i < wordLength - 2; ++i) {
             System.out.print(chosenWords[i] + " ");
